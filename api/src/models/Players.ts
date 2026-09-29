@@ -1,4 +1,5 @@
 import { Document, Schema, model } from "mongoose";
+import type { EvaluationScore } from "./Evaluation.js";
 
 export interface IPlayer extends Document {
   name: string;
@@ -13,7 +14,7 @@ export interface IPlayer extends Document {
   parentPhoneTwo?: string;
   coachId: Schema.Types.ObjectId | null;
   division: string;
-  evaluationScore?: Array<[string, number]>;
+  evaluationScore?: EvaluationScore;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,7 +34,7 @@ const playerSchema = new Schema<IPlayer>(
     coachId: { type: Schema.Types.ObjectId, ref: "Coach", default: null },
     division: { type: String, required: true },
     evaluationScore: {
-      type: [[String, Number]],
+      type: [Schema.Types.Mixed],
       default: [],
     },
   },

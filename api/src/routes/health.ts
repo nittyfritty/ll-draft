@@ -5,7 +5,7 @@ import { type Request, type Response } from "express";
 
 const router = Router();
 
-router.get("/api/health", (req: Request, res: Response) => {
+router.get("/", (req: Request, res: Response) => {
   const dbState = mongoose.connection.readyState;
   const connected = dbState === 1;
 

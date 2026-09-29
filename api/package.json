@@ -4,7 +4,7 @@
   "description": "API for the LL-Draft project",
   "main": "index.js",
   "scripts": {
-    "test": "tsx --test src/utils/helpers.test.ts",
+    "test": "tsx --test src/utils/helpers.test.ts src/routes/players.test.ts",
     "type-check": "tsc --noEmit",
     "build": "tsc",
     "seed": "tsx src/seed.ts",

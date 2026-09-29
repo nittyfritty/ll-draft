@@ -1,22 +1,38 @@
 import { validate } from "../middleware/validate.js";
 import { preprocess } from "../middleware/preprocess.js";
 import Router, { type Request, type Response } from "express";
-import Players from "../models/Players.js"
-import { body } from "express-validator";
+import Players, { type IPlayer } from "../models/Players.js"
+import { body, query } from "express-validator";
 import { populatePlayerAges } from "../utils/helpers.js";
+import type { QueryFilter } from "mongoose";
 
 const router = Router();
 
-router.get("/", validate, async (req: Request, res: Response) => {
+router.get("/", validate(
+    [query(
+        ["name", "division"])
+        .optional()
+    ]), async (req: Request, res: Response) => {
+        const { name, division } = req.query;
+        const filter: QueryFilter<IPlayer> = {};
+        if (name) {
+            const nameRegex = new RegExp(
+            name as string,
+            "i",
+        );
+        }
+        if (division) {
+            filter.division = division as string;
+        }
     try {
-        const Player = await Players.find();
+        const Player = await Players.find(filter);
         res.status(200).json(Player);
     } catch (error) {
         res.status(400).json({ message: "Error fetching players" });
     }
 });
 
-router.get("/:id", validate, async (req: Request, res: Response) => {
+router.get("/:id", validate([]), async (req: Request, res: Response) => {
     try {
         const Player = await Players.findById(req.params.id);
         if (!Player) {
@@ -66,7 +82,7 @@ router.put("/:id", validate([
     }
 });
 
-router.delete("/:id", validate, async (req: Request, res: Response) => {
+router.delete("/:id", validate([]), async (req: Request, res: Response) => {
     try {
         const deletedPlayer = await Players.findByIdAndDelete(req.params.id);
         if (!deletedPlayer) {
