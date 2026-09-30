@@ -32,7 +32,7 @@ const playerSchema = new Schema<IPlayer>(
     parentPhoneOne: { type: String, required: true },
     parentPhoneTwo: { type: String },
     coachId: { type: Schema.Types.ObjectId, ref: "Coach", default: null },
-    division: { type: String, required: true },
+    division: { type: String, required: true, enum: ["T-Ball U4", "T-Ball U6", "A", "AA","AAA","Majors"]},
     evaluationScore: {
       type: [Schema.Types.Mixed],
       default: [],

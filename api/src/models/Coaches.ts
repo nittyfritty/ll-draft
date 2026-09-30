@@ -30,7 +30,7 @@ const coachSchema = new Schema<ICoach>(
     email: { type: String, required: true },
     phone: { type: String, },
     teamName: { type: String },
-    division: { type: String, required: true },
+    division: { type: String, required: true, enum: ["T-Ball U4", "T-Ball U6", "A", "AA","AAA","Majors"] },
     nameDisplay: { type: String },
     playerlist: [
       {
