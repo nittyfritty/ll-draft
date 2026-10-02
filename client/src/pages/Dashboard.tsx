@@ -62,7 +62,10 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const [coachesData, playersData] = await Promise.all([
-          fetchCoaches(),
+          fetchCoaches({
+            name: searchQuery.trim() || undefined,
+            division: divisionFilter === "All" ? undefined : divisionFilter,
+          }),
           fetchPlayers({
             name: searchQuery.trim() || undefined,
             division: divisionFilter === "All" ? undefined : divisionFilter,
@@ -101,6 +104,17 @@ const Dashboard = () => {
       <h1>Dashboard</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <h2>Coaches</h2>
+            <select
+              value={divisionFilter}
+              onChange={(event) => setDivisionFilter(event.target.value as (typeof divisionFilterOptions)[number])}
+              aria-label="Filter coaches by division"
+            >
+              {divisionFilterOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
       <ul>
         {coaches.map((coach) => (
           <li key={coach._id}>
@@ -121,17 +135,6 @@ const Dashboard = () => {
               aria-label="Search players by name"
               style={{ minWidth: "220px" }}
             />
-            <select
-              value={divisionFilter}
-              onChange={(event) => setDivisionFilter(event.target.value as (typeof divisionFilterOptions)[number])}
-              aria-label="Filter players by division"
-            >
-              {divisionFilterOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
           </div>
           <table className="player-table">
             <thead>
@@ -206,7 +209,20 @@ const Dashboard = () => {
               <strong>{selectedCoach.nameDisplay ?? selectedCoach.name}</strong>
               <ul>
                 {teamPlayers.length ? (
-                  teamPlayers.map((player) => <li key={player._id}>{player.name}</li>)
+                  teamPlayers.map((player) => (
+                    <li key={player._id}>
+                      {player.name}{" "}
+                      <button
+                        type="button"
+                        aria-label={`Remove ${player.name} from ${selectedCoach.nameDisplay ?? selectedCoach.name}`}
+                        title="Return player to pool"
+                        disabled={updatingPlayerId !== null}
+                        onClick={() => void handleCoachChange(player, null)}
+                      >
+                        X
+                      </button>
+                    </li>
+                  ))
                 ) : (
                   <li>No players assigned</li>
                 )}

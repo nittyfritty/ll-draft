@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
 import mongoose from "mongoose";
 
 type IError = Error & {
@@ -12,7 +12,6 @@ export function errorHandler(
   err: Error | mongoose.Error,
   req: Request,
   res: Response,
-  next: NextFunction,
 ) {
   console.error(err);
 

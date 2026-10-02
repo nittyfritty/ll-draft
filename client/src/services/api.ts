@@ -55,8 +55,24 @@ export const updatePlayerCoach = async (
 };
 
 // FetchCoaches fetches all coaches from the API
-export const fetchCoaches = async (): Promise<Coach[]> => {
-  const response = await fetch("/api/coaches");
+export const fetchCoaches = async (filters?: {
+  name?: string;
+  division?: string;
+}): Promise<Coach[]> => {
+  const params = new URLSearchParams();
+
+  if (filters?.name) {
+    params.set("name", filters.name);
+  }
+
+  if (filters?.division && filters.division !== "All") {
+    params.set("division", filters.division);
+  }
+
+  const queryString = params.toString();
+  const url = queryString ? `/api/coaches?${queryString}` : "/api/coaches";
+
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`Error fetching coaches: ${response.statusText}`);
