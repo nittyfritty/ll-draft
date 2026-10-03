@@ -1,6 +1,5 @@
 import cors from "cors";
 import express from "express";
-import mongoose from "mongoose";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { notFoundHandler } from "./middleware/notFoundHandler.js";
 import playersRouter from "./routes/players.js";

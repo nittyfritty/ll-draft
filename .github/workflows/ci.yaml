@@ -1,0 +1,40 @@
+name: CI Workflow
+
+env:
+  NODE_VERSION: "20"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs: 
+  Backend Testing:
+    name: Backend Testing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: api/package-lock.json
+      - name: Install Dependencies
+        working-directory: ./api
+        run: npm ci 
+      - name: Run Typescript check
+        working-directory: ./api
+        run: npm run type-check 
+      - name: Run Tests
+        working-directory: ./api
+        run: npm test 
+      - name: Run Lint
+        working-directory: ./api
+        run: npm run lint
+      - name: Run Build
+        working-directory: ./api
+        run: npm run build
